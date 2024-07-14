@@ -2,16 +2,57 @@ package org.example;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class QuestionController {
     private QuestionModel model;
     private QuestionView view;
     private int currentRating;
     private String currentDetail;
+    private Map<String, String> userDatabase;  // Simulated user database
 
     public QuestionController(QuestionModel model, QuestionView view) {
         this.model = model;
         this.view = view;
+        this.userDatabase = new HashMap<>();
+
+        initialize();
+
+        view.getLoginButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = view.getUsernameField().getText();
+                String password = new String(view.getPasswordField().getPassword());
+
+                if (authenticate(username, password)) {
+                    view.getCardLayout().show(view.getPanelMain(), "Questions");
+                    view.getUsernameLabel().setText("User: " + username);  // Set the username on successful login
+                    showNextQuestion();
+                } else {
+                    view.getLoginMessageLabel().setText("Invalid username or password");
+                }
+            }
+        });
+
+        view.getCreateButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String newUsername = view.getNewUsernameField().getText();
+                String newPassword = new String(view.getNewPasswordField().getPassword());
+
+                if (createUser(newUsername, newPassword)) {
+                    view.getCardLayout().show(view.getPanelMain(), "Login");
+                    view.getUsernameField().setText(newUsername);
+                    view.getPasswordField().setText(newPassword);
+                    view.getLoginMessageLabel().setText("User created successfully. Please login.");
+                } else {
+                    view.getLoginMessageLabel().setText("Username already exists. Please choose another.");
+                }
+            }
+        });
 
         for (int i = 0; i < view.getRatingButtons().length; i++) {
             final int rating = i + 1;
@@ -19,7 +60,7 @@ public class QuestionController {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     currentRating = rating;
-                    view.getNextButton().setEnabled(true);
+                    view.getNextButton().setEnabled(true); // Enable the Next button
                 }
             });
         }
@@ -27,11 +68,10 @@ public class QuestionController {
         view.getNextButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                saveRating();
                 if (model.hasMoreQuestions()) {
-                    saveRating();
                     showNextQuestion();
                 } else {
-                    saveRating();
                     showDetails("Explanation");
                     view.getCardLayout().show(view.getPanelMain(), "Details");
                 }
@@ -42,6 +82,11 @@ public class QuestionController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 displayResults();
+                try {
+                    exportResultsToFile();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
 
@@ -63,8 +108,41 @@ public class QuestionController {
             }
         });
 
+        view.getInitialLoginButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.getCardLayout().show(view.getPanelMain(), "Login");
+            }
+        });
+
+        view.getInitialCreateUserButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.getCardLayout().show(view.getPanelMain(), "CreateUser");
+            }
+        });
+
         view.getNextButton().setEnabled(false);
-        showNextQuestion();
+    }
+
+    private void initialize() {
+        // Prepopulate with a default user for testing
+        userDatabase.put("user", "password");
+    }
+
+    private boolean authenticate(String username, String password) {
+        // Check if the user exists in the simulated user database and if the password matches
+        return userDatabase.containsKey(username) && userDatabase.get(username).equals(password);
+    }
+
+    private boolean createUser(String username, String password) {
+        // Check if the username already exists
+        if (userDatabase.containsKey(username)) {
+            return false;  // User already exists
+        }
+        // Create the new user
+        userDatabase.put(username, password);
+        return true;
     }
 
     private void saveRating() {
@@ -79,9 +157,10 @@ public class QuestionController {
         if (model.hasMoreQuestions()) {
             Question question = model.getCurrentQuestion();
             view.getQuestionLabel().setText(question.getText());
-            view.getNextButton().setEnabled(false);
-            model.incrementQuestionIndex();
+            view.getNextButton().setEnabled(false); // Disable the Next button until a rating is selected
+            view.updateProgressBar(model.getCurrentQuestionIndex() + 1, model.getTotalQuestions()); // update the progress bar
             System.out.println("Showing next question. Current index: " + model.getCurrentQuestionIndex());
+            model.incrementQuestionIndex(); // Move to the next question
         } else {
             System.out.println("No more questions. Displaying results.");
             displayResults();
@@ -246,5 +325,11 @@ public class QuestionController {
                 return "";
         }
     }
-}
 
+    private void exportResultsToFile() throws IOException {
+        FileWriter writer = new FileWriter("results.txt");
+        writer.write(view.getResultsArea().getText());
+        writer.close();
+        System.out.println("Results exported to results.txt");
+    }
+}

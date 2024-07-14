@@ -48,6 +48,10 @@ public class QuestionModel {
         return currentQuestionIndex;
     }
 
+    public int getTotalQuestions() {
+        return questions.size();
+    }
+
     private List<Question> createQuestions() {
         List<Question> questions = new ArrayList<>();
         questions.add(new Question("How often do you feel nervous, anxious, or on edge? (1 = Never, 5 = Always)", "anxiety"));
@@ -78,4 +82,3 @@ public class QuestionModel {
         return questions;
     }
 }
-

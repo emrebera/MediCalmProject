@@ -1,0 +1,25 @@
+anxiety: Total = 20, Count = 4, Average = 5.00
+anxiety Severity: Severe
+Explanation: Anxiety disorders involve excessive worry or fear that can interfere with daily activities. Severe anxiety often manifests through constant worry, physical symptoms like a racing heart, sweating, trembling, and muscle tension.
+Suggestion: Recommend consulting a mental health professional and possibly medication.
+
+stress: Total = 25, Count = 5, Average = 5.00
+stress Severity: Severe
+Explanation: Severe stress can lead to significant physical and emotional health problems. It often manifests through feelings of being overwhelmed, chronic irritability, and physical symptoms like headaches, stomach problems, and muscle tension.
+Suggestion: Suggest a thorough evaluation by a mental health professional for tailored interventions.
+
+depression: Total = 25, Count = 5, Average = 5.00
+depression Severity: Severe
+Explanation: Depression involves persistent feelings of sadness, hopelessness, and a loss of interest in activities once enjoyed. Moderate depression can significantly impact daily functioning, causing difficulties in maintaining relationships.
+Suggestion: Urge consulting a psychiatrist for comprehensive treatment including medication.
+
+panic disorder: Total = 25, Count = 5, Average = 5.00
+panic disorder Severity: Severe
+Explanation: Panic disorder involves recurrent panic attacks characterized by sudden, intense fear and physical symptoms such as chest pain, heart palpitations, shortness of breath, dizziness, and nausea.
+Suggestion: Strongly advise consulting a mental health professional for a comprehensive treatment plan, possibly including medication.
+
+insomnia: Total = 25, Count = 5, Average = 5.00
+insomnia Severity: Severe
+Explanation: Insomnia is characterized by difficulty falling asleep, staying asleep, or waking up too early. Moderate insomnia can affect daytime functioning, leading to fatigue, irritability, and difficulty concentrating.
+Suggestion: Strongly advise seeing a sleep specialist and discussing potential medication.
+
